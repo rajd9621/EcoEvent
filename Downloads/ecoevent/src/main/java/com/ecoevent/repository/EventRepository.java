@@ -26,7 +26,4 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT e FROM Event e WHERE e.published = true AND (LOWER(e.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(e.description) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(e.location) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     List<Event> searchEvents(@Param("keyword") String keyword);
-
-    @Query("SELECT e FROM Event e WHERE e.published = true AND e.startDate >= :startDate AND e.startDate <= :endDate ORDER BY e.startDate ASC")
-    List<Event> findEventsBetweenDates(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }

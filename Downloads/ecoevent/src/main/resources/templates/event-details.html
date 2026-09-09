@@ -17,7 +17,7 @@
                     <div class="card border-0 shadow-sm mb-3">
                         <div class="card-body">
                             <h6 class="text-primary"><i class="bi bi-calendar me-2"></i>Event Schedule</h6>
-                            <p class="mb-1 small"><strong>Start:</strong> <span th:text="${#temporals.format(event.startDate, 'dd MMM yyyy, HH:mm')}">Start</span></p>
+                            <p class="mb-1 small"><strong>Start:</strong> <span th:text="${event.startDate != null ? #temporals.format(event.startDate, 'dd MMM yyyy, HH:mm') : 'TBD'}">Start</span></p>
                             <p class="mb-0 small"><strong>End:</strong> <span th:text="${event.endDate != null ? #temporals.format(event.endDate, 'dd MMM yyyy, HH:mm') : 'TBD'}">End</span></p>
                         </div>
                     </div>
@@ -32,7 +32,6 @@
                 </div>
             </div>
 
-            <!-- Sustainability Section -->
             <h4 class="fw-bold text-success mt-4"><i class="bi bi-globe me-2"></i>Sustainability Information</h4>
             <div class="row g-3 mt-1">
                 <div class="col-md-4">
@@ -67,7 +66,6 @@
                 </div>
             </div>
 
-            <!-- Sustainability Score -->
             <div th:if="${score != null}" class="card border-0 shadow-sm mt-4">
                 <div class="card-body">
                     <h5 class="text-success"><i class="bi bi-award me-2"></i>Sustainability Score: <span th:text="${score.totalScore + '/100'}">Score</span></h5>
@@ -87,15 +85,14 @@
                 </div>
             </div>
 
-            <!-- Feedback -->
             <h4 class="fw-bold text-primary mt-4"><i class="bi bi-chat-dots me-2"></i>Participant Feedback</h4>
             <div th:if="${feedbacks != null and !feedbacks.isEmpty()}" class="mt-3">
                 <div class="card border-0 shadow-sm mb-2" th:each="fb : ${feedbacks}">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <strong th:text="${fb.user != null ? fb.user.fullName : 'Anonymous'}">Name</strong>
-                            <span>
-                                <i class="bi bi-star-fill text-warning" th:each="i : ${#numbers.sequence(1, fb.rating != null ? fb.rating : 1)}"></i>
+                            <span th:if="${fb.rating != null}">
+                                <i class="bi bi-star-fill text-warning" th:each="i : ${#numbers.sequence(1, fb.rating)}"></i>
                             </span>
                         </div>
                         <p class="text-muted mb-0 mt-1" th:text="${fb.comment}">Comment</p>
@@ -108,7 +105,10 @@
         <div class="col-lg-4">
             <div class="card shadow border-0 sticky-top" style="top:80px">
                 <div class="card-body p-4">
-                    <h3 class="fw-bold text-primary" th:text="${event.ticketPrice.doubleValue() == 0.0 ? 'Free' : '₹' + event.ticketPrice}">Price</h3>
+                    <h3 class="fw-bold text-primary">
+                        <span th:if="${event.ticketPrice != null and event.ticketPrice == 0}">Free</span>
+                        <span th:if="${event.ticketPrice != null and event.ticketPrice > 0}" th:text="'Rs ' + ${event.ticketPrice}">Price</span>
+                    </h3>
                     <p class="text-muted small"><i class="bi bi-people me-1"></i>Max: <span th:text="${event.maxParticipants}">0</span> participants</p>
                     <p class="text-muted small"><i class="bi bi-person-check me-1"></i>Expected: <span th:text="${event.expectedAttendance}">0</span></p>
                     <div sec:authorize="isAuthenticated()">

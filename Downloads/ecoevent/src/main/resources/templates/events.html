@@ -21,7 +21,7 @@
             <form th:action="@{/events}" method="get" class="d-flex gap-2">
                 <select name="categoryId" class="form-select" onchange="this.form.submit()">
                     <option value="">All Categories</option>
-                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}" th:selected="${cat.id == categoryId}">Category</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}">Category</option>
                 </select>
             </form>
         </div>
@@ -36,9 +36,12 @@
                     <h5 class="card-title" th:text="${event.title}">Title</h5>
                     <p class="card-text text-muted small" th:text="${#strings.abbreviate(event.description, 80)}">Desc</p>
                     <p class="text-muted small mb-1"><i class="bi bi-geo-alt me-1"></i><span th:text="${event.location}">Location</span></p>
-                    <p class="text-muted small mb-2"><i class="bi bi-calendar me-1"></i><span th:text="${#temporals.format(event.startDate, 'dd MMM yyyy, HH:mm')}">Date</span></p>
+                    <p class="text-muted small mb-2"><i class="bi bi-calendar me-1"></i><span th:text="${event.startDate != null ? #temporals.format(event.startDate, 'dd MMM yyyy, HH:mm') : 'TBD'}">Date</span></p>
                     <div class="mt-auto d-flex justify-content-between align-items-center">
-                        <span class="fw-bold text-primary" th:text="${event.ticketPrice.doubleValue() == 0.0 ? 'Free' : '₹' + event.ticketPrice}">Price</span>
+                        <span class="fw-bold text-primary">
+                            <span th:if="${event.ticketPrice != null and event.ticketPrice == 0}">Free</span>
+                            <span th:if="${event.ticketPrice != null and event.ticketPrice > 0}" th:text="'Rs ' + ${event.ticketPrice}">Price</span>
+                        </span>
                         <a th:href="@{'/events/' + ${event.id}}" class="btn btn-sm btn-primary">View Details</a>
                     </div>
                 </div>

@@ -21,7 +21,7 @@ public class PaymentService {
         Payment payment = Payment.builder()
                 .transactionId("TXN-" + System.currentTimeMillis())
                 .amount(amount)
-                .status(amount.compareTo(BigDecimal.ZERO) <= 0 ? Payment.PaymentStatus.COMPLETED : Payment.PaymentStatus.COMPLETED)
+                .status(Payment.PaymentStatus.COMPLETED)
                 .method(amount.compareTo(BigDecimal.ZERO) <= 0 ? Payment.PaymentMethod.FREE : Payment.PaymentMethod.UPI)
                 .registration(registration)
                 .user(user)

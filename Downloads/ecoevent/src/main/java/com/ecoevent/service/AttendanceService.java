@@ -35,7 +35,7 @@ public class AttendanceService {
     }
 
     public List<Attendance> findByEvent(Long eventId) {
-        return attendanceRepository.findByRegistration_EventId(eventId);
+        return attendanceRepository.findByEventId(eventId);
     }
 
     public Optional<Attendance> findByRegistration(Long registrationId) {
@@ -43,10 +43,10 @@ public class AttendanceService {
     }
 
     public long countPresent(Long eventId) {
-        return attendanceRepository.countByStatusAndRegistration_EventId(Attendance.AttendanceStatus.PRESENT, eventId);
+        return attendanceRepository.countByStatusAndEventId(Attendance.AttendanceStatus.PRESENT, eventId);
     }
 
     public long countAbsent(Long eventId) {
-        return attendanceRepository.countByStatusAndRegistration_EventId(Attendance.AttendanceStatus.ABSENT, eventId);
+        return attendanceRepository.countByStatusAndEventId(Attendance.AttendanceStatus.ABSENT, eventId);
     }
 }
