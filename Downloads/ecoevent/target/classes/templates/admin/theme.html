@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Theme')}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="d-flex">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+    <div class="flex-grow-1 p-4">
+<h2 class="fw-bold text-primary mb-4"><i class="bi bi-palette me-2"></i>Theme Manager</h2>
+<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <form th:action="@{/admin/theme/save}" method="post" th:object="${theme}">
+                    <input type="hidden" th:field="*{id}"/>
+                    <h5 class="mb-3">Colors</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><label class="form-label small">Primary Color</label><input type="text" th:field="*{primaryColor}" class="form-control form-control-color"/></div>
+                        <div class="col-md-4"><label class="form-label small">Secondary Color</label><input type="text" th:field="*{secondaryColor}" class="form-control"/></div>
+                        <div class="col-md-4"><label class="form-label small">Accent Color</label><input type="text" th:field="*{accentColor}" class="form-control"/></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4"><label class="form-label small">Background</label><input type="text" th:field="*{backgroundColor}" class="form-control"/></div>
+                        <div class="col-md-4"><label class="form-label small">Text Color</label><input type="text" th:field="*{textColor}" class="form-control"/></div>
+                        <div class="col-md-4"><label class="form-label small">Font Family</label><input type="text" th:field="*{fontFamily}" class="form-control"/></div>
+                    </div>
+                    <h5 class="mb-3">Styles</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-3"><label class="form-label small">Button Style</label><select th:field="*{buttonStyle}" class="form-select"><option>rounded</option><option>square</option><option>pill</option></select></div>
+                        <div class="col-md-3"><label class="form-label small">Card Style</label><select th:field="*{cardStyle}" class="form-select"><option>shadow</option><option>bordered</option><option>flat</option></select></div>
+                        <div class="col-md-3"><label class="form-label small">Header Style</label><select th:field="*{headerStyle}" class="form-select"><option>solid</option><option>transparent</option><option>gradient</option></select></div>
+                        <div class="col-md-3"><label class="form-label small">Footer Style</label><select th:field="*{footerStyle}" class="form-select"><option>dark</option><option>light</option></select></div>
+                    </div>
+                    <div class="form-check mb-3"><input type="checkbox" th:field="*{darkMode}" class="form-check-input"/><label class="form-check-label">Dark Mode</label></div>
+                    <div class="mb-3"><label class="form-label small">Custom CSS</label><textarea th:field="*{customCss}" class="form-control font-monospace" rows="5"></textarea></div>
+                    <button type="submit" class="btn btn-primary">Save Theme</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h6>Theme Preview</h6>
+                <div class="p-3 rounded mb-2" th:style="'background:' + ${theme.primaryColor}">
+                    <p class="text-white mb-0">Primary Color</p>
+                </div>
+                <div class="p-3 rounded mb-2" th:style="'background:' + ${theme.secondaryColor}">
+                    <p class="text-white mb-0">Secondary Color</p>
+                </div>
+                <div class="p-3 rounded mb-2" th:style="'background:' + ${theme.accentColor}">
+                    <p class="text-white mb-0">Accent Color</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

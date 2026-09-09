@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Registrations')}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="d-flex">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+    <div class="flex-grow-1 p-4">
+<h2 class="fw-bold text-primary mb-4"><i class="bi bi-clipboard-check me-2"></i>Registrations</h2>
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light"><tr><th>Participant</th><th>Event</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody>
+                <tr th:each="reg : ${registrations}">
+                    <td th:text="${reg.user != null ? reg.user.fullName : 'N/A'}">User</td>
+                    <td th:text="${reg.event != null ? reg.event.title : 'N/A'}">Event</td>
+                    <td><span class="badge bg-info" th:text="${reg.status}">Status</span></td>
+                    <td th:text="${reg.registeredAt != null ? #temporals.format(reg.registeredAt, 'dd MMM yyyy') : 'N/A'}">Date</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

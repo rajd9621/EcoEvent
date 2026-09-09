@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My Tickets')}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="container py-4">
+<div class="row">
+    <div class="col-12">
+        <h2 class="fw-bold text-primary mb-4">My Tickets</h2>
+        <div class="row g-4">
+            <div class="col-md-6" th:each="ticket : ${tickets}">
+                <div class="card border-0 shadow-sm ticket-card">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5 th:text="${ticket.registration.event.title}">Event</h5>
+                                <p class="text-muted small mb-0"><i class="bi bi-calendar me-1"></i><span th:text="${ticket.registration.event.startDate != null ? #temporals.format(ticket.registration.event.startDate, 'dd MMM yyyy, HH:mm') : ''}">Date</span></p>
+                                <p class="text-muted small mb-0"><i class="bi bi-geo-alt me-1"></i><span th:text="${ticket.registration.event.location}">Location</span></p>
+                            </div>
+                            <span class="badge" th:classappend="${ticket.used ? 'bg-secondary' : 'bg-success'}" th:text="${ticket.used ? 'Used' : 'Valid'}">Status</span>
+                        </div>
+                        <div class="text-center my-3">
+                            <img th:if="${ticket.qrCodeBase64 != null}" th:src="'data:image/png;base64,' + ${ticket.qrCodeBase64}" alt="QR Code" class="img-fluid" style="max-width:200px"/>
+                            <p class="mt-2"><code class="fs-5" th:text="${ticket.ticketCode}">CODE</code></p>
+                        </div>
+                        <p class="text-muted small text-center mb-0">Show this QR code at the event entrance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p th:if="${tickets.isEmpty()}" class="text-muted mt-3">No tickets yet. Register for an event to get a ticket.</p>
+    </div>
+</div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

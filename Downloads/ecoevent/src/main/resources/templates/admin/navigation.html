@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Navigation')}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="d-flex">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+    <div class="flex-grow-1 p-4">
+<h2 class="fw-bold text-primary mb-4"><i class="bi bi-list-nested me-2"></i>Navigation Manager</h2>
+<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h5>Add Menu Item</h5>
+                <form th:action="@{/admin/navigation/save}" method="post">
+                    <input type="hidden" name="id"/>
+                    <div class="mb-2"><label class="form-label small">Label</label><input type="text" name="label" class="form-control" required/></div>
+                    <div class="mb-2"><label class="form-label small">URL</label><input type="text" name="url" class="form-control" required placeholder="/about"/></div>
+                    <div class="mb-2"><label class="form-label small">Icon Class</label><input type="text" name="iconClass" class="form-control" placeholder="bi-info-circle"/></div>
+                    <div class="mb-2"><label class="form-label small">Display Order</label><input type="number" name="displayOrder" class="form-control" value="0"/></div>
+                    <div class="form-check mb-2"><input type="checkbox" name="visible" class="form-check-input" checked/><label class="form-check-label small">Visible</label></div>
+                    <button type="submit" class="btn btn-primary w-100">Save Item</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light"><tr><th>Order</th><th>Label</th><th>URL</th><th>Icon</th><th>Visible</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        <tr th:each="item : ${navItems}">
+                            <td th:text="${item.displayOrder}">0</td>
+                            <td th:text="${item.label}">Label</td>
+                            <td><code th:text="${item.url}">URL</code></td>
+                            <td><i class="bi" th:classappend="${item.iconClass}"></i></td>
+                            <td><i class="bi" th:classappend="${item.visible ? 'bi-check-circle text-success' : 'bi-x-circle text-danger'}"></i></td>
+                            <td>
+                                <a th:href="@{'/admin/navigation/' + ${item.id} + '/toggle'}" class="btn btn-sm btn-outline-warning"><i class="bi bi-eye"></i></a>
+                                <a th:href="@{'/admin/navigation/' + ${item.id} + '/delete'}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

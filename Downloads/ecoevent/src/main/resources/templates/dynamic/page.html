@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${page.title})}"></head>
+<body>
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="container py-5">
+    <h1 class="fw-bold text-primary mb-3" th:text="${page.title}">Page Title</h1>
+    <p class="text-muted mb-4" th:text="${page.description}">Page description</p>
+    
+    <th:block th:each="section : ${sections}">
+        <section class="py-4" th:style="${section.backgroundColor != null ? 'background-color:' + section.backgroundColor : ''}">
+            <div class="container">
+                <th:block th:switch="${section.sectionType}">
+                    <div th:case="'HERO'" class="text-center py-5">
+                        <h2 th:text="${section.content}">Hero</h2>
+                        <a th:if="${section.buttonText != null}" th:href="@{${section.buttonUrl}}" class="btn btn-primary mt-3" th:text="${section.buttonText}">Button</a>
+                    </div>
+                    <div th:case="'TEXT'">
+                        <h3 th:text="${section.sectionName}">Section</h3>
+                        <p th:text="${section.content}">Content</p>
+                    </div>
+                    <div th:case="'IMAGE'" class="text-center">
+                        <img th:if="${section.image != null}" th:src="${section.image}" class="img-fluid rounded" alt="Image"/>
+                        <p th:text="${section.content}">Content</p>
+                    </div>
+                    <div th:case="'EVENTS'">
+                        <h3 th:text="${section.sectionName}">Events</h3>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-4" th:each="event : ${events}" th:if="${eventStat.count <= 6}">
+                                <div class="card h-100 shadow-sm">
+                                    <div class="card-body">
+                                        <h6 th:text="${event.title}">Title</h6>
+                                        <a th:href="@{'/events/' + ${event.id}}" class="btn btn-sm btn-primary">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:case="'STATISTICS'" class="row text-center">
+                        <div class="col-md-3"><h2 th:text="${stats.totalEvents}">0</h2><p>Events</p></div>
+                        <div class="col-md-3"><h2 th:text="${stats.sustainableEvents}">0</h2><p>Sustainable</p></div>
+                        <div class="col-md-3"><h2 th:text="${#numbers.formatDecimal(stats.avgScore, 1, 1)}">0</h2><p>Avg Score</p></div>
+                        <div class="col-md-3"><h2 th:text="${stats.totalWasteRecords}">0</h2><p>Waste Records</p></div>
+                    </div>
+                    <div th:case="'SDG_INFORMATION'" class="bg-light p-4 rounded">
+                        <h3 class="text-success"><i class="bi bi-globe me-2"></i><span th:text="${section.sectionName}">SDG</span></h3>
+                        <p th:text="${section.content}">Content</p>
+                    </div>
+                    <div th:case="'CUSTOM_CONTENT'">
+                        <h3 th:text="${section.sectionName}">Custom</h3>
+                        <div th:utext="${section.content}">Custom content</div>
+                    </div>
+                    <div th:case="*">
+                        <h3 th:text="${section.sectionName}">Section</h3>
+                        <p th:text="${section.content}">Content</p>
+                    </div>
+                </th:block>
+            </div>
+        </section>
+    </th:block>
+</div>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

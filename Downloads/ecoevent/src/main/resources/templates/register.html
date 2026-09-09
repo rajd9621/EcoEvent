@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Register')}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-body p-5">
+                    <h2 class="text-center fw-bold text-primary mb-1">Create Account</h2>
+                    <p class="text-center text-muted mb-4">Join EcoEvent and participate in sustainable events</p>
+                    <div th:if="${error != null}" class="alert alert-danger" th:text="${error}">Error</div>
+                    <form th:action="@{/register}" th:object="${userDto}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" th:field="*{fullName}" class="form-control" required/>
+                            <div th:errors="*{fullName}" class="text-danger small"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" th:field="*{email}" class="form-control" required/>
+                            <div th:errors="*{email}" class="text-danger small"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Password</label>
+                                <input type="password" th:field="*{password}" class="form-control" required/>
+                                <div th:errors="*{password}" class="text-danger small"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Confirm Password</label>
+                                <input type="password" th:field="*{confirmPassword}" class="form-control" required/>
+                                <div th:errors="*{confirmPassword}" class="text-danger small"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone</label>
+                                <input type="text" th:field="*{phone}" class="form-control"/>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Organization</label>
+                                <input type="text" th:field="*{organization}" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Register as</label>
+                            <select th:field="*{role}" class="form-select">
+                                <option value="ROLE_PARTICIPANT">Participant</option>
+                                <option value="ROLE_ORGANIZER">Event Organizer</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Create Account</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <p class="text-muted small mb-0">Already have an account? <a th:href="@{/login}" class="text-primary">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

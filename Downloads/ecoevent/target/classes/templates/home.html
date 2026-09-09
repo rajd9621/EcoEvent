@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Home')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: announcement}"></div>
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main>
+    <th:block th:each="section : ${sections}">
+        <th:block th:switch="${section.sectionType}">
+            
+            <!-- HERO -->
+            <section th:case="'HERO'" class="hero-section text-white d-flex align-items-center" 
+                     th:style="${section.backgroundColor != null ? 'background-color:' + section.backgroundColor : ''}">
+                <div class="container py-5">
+                    <div class="row align-items-center">
+                        <div class="col-lg-7">
+                            <h1 class="display-4 fw-bold mb-3" th:text="${section.content}">Hero Title</h1>
+                            <p class="lead mb-4 text-light-75">Plan, participate and manage events while reducing waste, optimizing resources and promoting responsible consumption.</p>
+                            <div class="d-flex gap-2 flex-wrap">
+                                <a th:if="${section.buttonText != null}" th:href="@{${section.buttonUrl != null ? section.buttonUrl : '/events'}}" 
+                                   class="btn btn-accent btn-lg px-4" th:text="${section.buttonText}">Button</a>
+                                <a th:href="@{/register}" class="btn btn-outline-light btn-lg px-4">Create Sustainable Event</a>
+                                <a th:href="@{/sdg12}" class="btn btn-outline-light btn-lg px-4">Learn About SDG 12</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 d-none d-lg-block text-center">
+                            <i class="bi bi-globe-americas text-white" style="font-size:12rem;opacity:0.3"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EVENTS -->
+            <section th:case="'EVENTS'" class="py-5" th:style="${section.backgroundColor != null ? 'background-color:' + section.backgroundColor : ''}">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h2 class="fw-bold text-primary" th:text="${section.sectionName}">Events</h2>
+                        <p class="text-muted" th:text="${section.content}">Description</p>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4" th:each="event : ${upcomingEvents}" th:if="${eventStat.count <= 6}">
+                            <div class="card event-card h-100 shadow-sm">
+                                <img th:src="${event.imageUrl != null ? event.imageUrl : 'https://via.placeholder.com/400x200/2E7D32/fff?text=EcoEvent'}" 
+                                     class="card-img-top" alt="Event" style="height:200px;object-fit:cover"/>
+                                <div class="card-body d-flex flex-column">
+                                    <span class="badge bg-success mb-2 align-self-start" th:text="${event.category != null ? event.category.name : 'General'}">Category</span>
+                                    <h5 class="card-title" th:text="${event.title}">Event Title</h5>
+                                    <p class="card-text text-muted small" th:text="${#strings.abbreviate(event.description, 100)}">Description</p>
+                                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                                        <span class="text-primary fw-bold" th:text="'₹' + ${event.ticketPrice}">Price</span>
+                                        <a th:href="@{'/events/' + ${event.id}}" class="btn btn-sm btn-primary">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4" th:if="${section.buttonText != null}">
+                        <a th:href="@{${section.buttonUrl != null ? section.buttonUrl : '/events'}}" class="btn btn-outline-primary" th:text="${section.buttonText}">View All</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SDG INFORMATION -->
+            <section th:case="'SDG_INFORMATION'" class="py-5" th:style="${section.backgroundColor != null ? 'background-color:' + section.backgroundColor : ''}">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center mb-3 mb-md-0">
+                            <div class="sdg-badge">12</div>
+                        </div>
+                        <div class="col-md-10">
+                            <h2 class="fw-bold text-success" th:text="${section.sectionName}">SDG 12</h2>
+                            <p class="lead" th:text="${section.content}">SDG content</p>
+                            <a th:href="@{/sdg12}" class="btn btn-success">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STATISTICS -->
+            <section th:case="'STATISTICS'" class="py-5 bg-light" th:style="${section.backgroundColor != null ? 'background-color:' + section.backgroundColor : ''}">
+                <div class="container">
+                    <h2 class="text-center fw-bold mb-5 text-primary" th:text="${section.sectionName}">Statistics</h2>
+                    <div class="row g-4 text-center">
+                        <div class="col-6 col-md-3">
+                            <div class="stat-card">
+                                <i class="bi bi-calendar-check stat-icon"></i>
+                                <h3 class="fw-bold" th:text="${stats.totalEvents}">0</h3>
+                                <p class="text-muted">Total Events</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="stat-card">
+                                <i class="bi bi-globe stat-icon"></i>
+                                <h3 class="fw-bold" th:text="${stats.sustainableEvents}">0</h3>
+                                <p class="text-muted">Sustainable Events</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="stat-card">
+                                <i class="bi bi-graph-up stat-icon"></i>
+                                <h3 class="fw-bold" th:text="${#numbers.formatDecimal(stats.avgScore, 1, 1)}">0</h3>
+                                <p class="text-muted">Avg Score</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="stat-card">
+                                <i class="bi bi-recycle stat-icon"></i>
+                                <h3 class="fw-bold" th:text="${stats.totalWasteRecords}">0</h3>
+                                <p class="text-muted">Waste Tracked</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CARDS -->
+            <section th:case="'CARDS'" class="py-5">
+                <div class="container">
+                    <h2 class="text-center fw-bold mb-2 text-primary" th:text="${section.sectionName}">Cards</h2>
+                    <p class="text-center text-muted mb-5" th:text="${section.content}">Description</p>
+                    <div class="row g-4">
+                        <div class="col-md-4" th:each="event : ${sustainableEvents}" th:if="${eventStat.count <= 3}">
+                            <div class="card eco-card h-100 border-0 shadow-sm">
+                                <div class="card-body text-center p-4">
+                                    <div class="eco-icon-wrap mb-3">
+                                        <i class="bi bi-shield-check"></i>
+                                    </div>
+                                    <h5 th:text="${event.title}">Event</h5>
+                                    <p class="text-muted small" th:text="${#strings.abbreviate(event.description, 80)}">Desc</p>
+                                    <a th:href="@{'/events/' + ${event.id}}" class="btn btn-success btn-sm">View Event</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RESOURCE STATISTICS -->
+            <section th:case="'RESOURCE_STATISTICS'" class="py-5 bg-light" th:style="${section.backgroundColor != null ? 'background-color:' + section.backgroundColor : ''}">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2 class="fw-bold text-primary" th:text="${section.sectionName}">Resource</h2>
+                            <p class="text-muted" th:text="${section.content}">Content</p>
+                            <ul class="list-unstyled mt-3">
+                                <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Track food, water, and electricity usage</li>
+                                <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Monitor printed vs reusable materials</li>
+                                <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Optimize resource allocation</li>
+                                <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>Reduce environmental footprint</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <i class="bi bi-bar-chart-line text-primary" style="font-size:8rem;opacity:0.3"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- WASTE STATISTICS -->
+            <section th:case="'WASTE_STATISTICS'" class="py-5" th:style="${section.backgroundColor != null ? 'background-color:' + section.backgroundColor : ''}">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <i class="bi bi-recycle text-success" style="font-size:8rem;opacity:0.3"></i>
+                        </div>
+                        <div class="col-md-6">
+                            <h2 class="fw-bold text-success" th:text="${section.sectionName}">Waste</h2>
+                            <p class="text-muted" th:text="${section.content}">Content</p>
+                            <div class="row mt-3">
+                                <div class="col-6 mb-2"><i class="bi bi-trash text-danger me-1"></i> Organic Waste Tracking</div>
+                                <div class="col-6 mb-2"><i class="bi bi-trash text-danger me-1"></i> Plastic Waste Reduction</div>
+                                <div class="col-6 mb-2"><i class="bi bi-trash text-danger me-1"></i> E-Waste Management</div>
+                                <div class="col-6 mb-2"><i class="bi bi-arrow-repeat text-success me-1"></i> Recycling Monitoring</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TESTIMONIALS -->
+            <section th:case="'TESTIMONIALS'" class="py-5 bg-light">
+                <div class="container">
+                    <h2 class="text-center fw-bold mb-5 text-primary" th:text="${section.sectionName}">Testimonials</h2>
+                    <div class="row g-4" th:if="${featuredFeedback != null}">
+                        <div class="col-md-4" th:each="fb : ${featuredFeedback}" th:if="${fbStat.count <= 3}">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body p-4">
+                                    <div class="mb-2">
+                                        <i class="bi bi-star-fill text-warning" th:each="i : ${#numbers.sequence(1, fb.rating)}"></i>
+                                    </div>
+                                    <p class="text-muted" th:text="'\'' + ${fb.comment} + '\''">Comment</p>
+                                    <p class="fw-bold mb-0" th:text="${fb.user != null ? fb.user.fullName : 'Anonymous'}">Name</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TEXT / CTA -->
+            <section th:case="'TEXT'" class="py-5 text-center text-white" 
+                     th:style="${section.backgroundColor != null ? 'background-color:' + section.backgroundColor : 'background-color:#2E7D32'}">
+                <div class="container">
+                    <p class="lead mb-4" th:text="${section.content}">Content</p>
+                    <a th:if="${section.buttonText != null}" th:href="@{${section.buttonUrl != null ? section.buttonUrl : '/register'}}" 
+                       class="btn btn-accent btn-lg px-5" th:text="${section.buttonText}">Button</a>
+                </div>
+            </section>
+
+            <!-- DEFAULT -->
+            <section th:case="*" class="py-5" th:style="${section.backgroundColor != null ? 'background-color:' + section.backgroundColor : ''}">
+                <div class="container">
+                    <h2 th:text="${section.sectionName}">Section</h2>
+                    <p th:text="${section.content}">Content</p>
+                </div>
+            </section>
+
+        </th:block>
+    </th:block>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

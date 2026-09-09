@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Feedback')}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="container py-4">
+<div class="row">
+    <div class="col-12">
+        <h2 class="fw-bold text-primary mb-4">Submit Feedback</h2>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body">
+                <form th:action="@{/participant/feedback/submit}" method="post">
+                    <div class="mb-3"><label class="form-label">Event</label><select name="eventId" class="form-select" required><option value="">Select Event</option><option th:each="reg : ${registrations}" th:value="${reg.event.id}" th:text="${reg.event.title}">Event</option></select></div>
+                    <div class="row mb-3">
+                        <div class="col-md-6"><label class="form-label">Rating (1-5)</label><select name="rating" class="form-select"><option value="5">5 - Excellent</option><option value="4">4 - Good</option><option value="3">3 - Average</option><option value="2">2 - Poor</option><option value="1">1 - Terrible</option></select></div>
+                        <div class="col-md-6"><label class="form-label">Sustainability Rating (1-5)</label><select name="sustainabilityRating" class="form-select"><option value="5">5 - Very Sustainable</option><option value="4">4 - Sustainable</option><option value="3">3 - Average</option><option value="2">2 - Poor</option><option value="1">1 - Not Sustainable</option></select></div>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Comment</label><textarea name="comment" class="form-control" rows="4" required></textarea></div>
+                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                </form>
+            </div>
+        </div>
+        <h5>My Feedback History</h5>
+        <div th:each="fb : ${feedbacks}" class="card border-0 shadow-sm mb-2">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <strong th:text="${fb.event != null ? fb.event.title : 'Event'}">Event</strong>
+                    <span th:text="'⭐'.repeat(fb.rating != null ? fb.rating : 0)">Rating</span>
+                </div>
+                <p class="text-muted mb-0 mt-1" th:text="${fb.comment}">Comment</p>
+                <span class="badge" th:classappend="${fb.approved ? 'bg-success' : 'bg-warning'}" th:text="${fb.approved ? 'Approved' : 'Pending'}">Status</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

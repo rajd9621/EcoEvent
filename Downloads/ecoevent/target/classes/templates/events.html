@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Events')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="fw-bold text-primary">Upcoming Events</h2>
+            <p class="text-muted">Discover and join sustainable events near you</p>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form th:action="@{/events}" method="get" class="d-flex gap-2">
+                <input type="text" name="search" class="form-control" placeholder="Search events..." th:value="${search}"/>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <form th:action="@{/events}" method="get" class="d-flex gap-2">
+                <select name="categoryId" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}" th:selected="${cat.id == categoryId}">Category</option>
+                </select>
+            </form>
+        </div>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4" th:each="event : ${events}">
+            <div class="card event-card h-100 shadow-sm">
+                <img th:src="${event.imageUrl != null ? event.imageUrl : 'https://via.placeholder.com/400x200/2E7D32/fff?text=EcoEvent'}" 
+                     class="card-img-top" style="height:200px;object-fit:cover" alt="Event"/>
+                <div class="card-body d-flex flex-column">
+                    <span class="badge bg-success mb-2 align-self-start" th:text="${event.category != null ? event.category.name : 'General'}">Category</span>
+                    <h5 class="card-title" th:text="${event.title}">Title</h5>
+                    <p class="card-text text-muted small" th:text="${#strings.abbreviate(event.description, 80)}">Desc</p>
+                    <p class="text-muted small mb-1"><i class="bi bi-geo-alt me-1"></i><span th:text="${event.location}">Location</span></p>
+                    <p class="text-muted small mb-2"><i class="bi bi-calendar me-1"></i><span th:text="${#temporals.format(event.startDate, 'dd MMM yyyy, HH:mm')}">Date</span></p>
+                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary" th:text="${event.ticketPrice.doubleValue() == 0.0 ? 'Free' : '₹' + event.ticketPrice}">Price</span>
+                        <a th:href="@{'/events/' + ${event.id}}" class="btn btn-sm btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:if="${events.isEmpty()}" class="text-center py-5">
+        <i class="bi bi-calendar-x text-muted" style="font-size:3rem"></i>
+        <p class="text-muted mt-3">No events found. Try a different search.</p>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

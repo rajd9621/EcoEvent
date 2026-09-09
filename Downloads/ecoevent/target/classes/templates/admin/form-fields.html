@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Form Fields')}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="d-flex">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+    <div class="flex-grow-1 p-4">
+<h2 class="fw-bold text-primary mb-2"><i class="bi bi-input-cursor-text me-2"></i>Fields: <span th:text="${form.name}">Form</span></h2>
+<p><a th:href="@{/admin/forms}" class="text-decoration-none"><i class="bi bi-arrow-left"></i> Back to Forms</a></p>
+<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h5>Add Field</h5>
+                <form th:action="@{'/admin/forms/' + ${form.id} + '/fields/save'}" method="post">
+                    <input type="hidden" name="id"/>
+                    <div class="mb-2"><label class="form-label small">Label</label><input type="text" name="label" class="form-control" required/></div>
+                    <div class="mb-2"><label class="form-label small">Field Type</label>
+                        <select name="fieldType" class="form-select">
+                            <option th:each="ft : ${fieldTypes}" th:value="${ft}" th:text="${ft}">Type</option>
+                        </select>
+                    </div>
+                    <div class="mb-2"><label class="form-label small">Placeholder</label><input type="text" name="placeholder" class="form-control"/></div>
+                    <div class="mb-2"><label class="form-label small">Options (comma-separated)</label><input type="text" name="options" class="form-control" placeholder="Option1,Option2"/></div>
+                    <div class="mb-2"><label class="form-label small">Help Text</label><input type="text" name="helpText" class="form-control"/></div>
+                    <div class="mb-2"><label class="form-label small">Display Order</label><input type="number" name="displayOrder" class="form-control" value="0"/></div>
+                    <div class="form-check mb-3"><input type="checkbox" name="required" class="form-check-input"/><label class="form-check-label small">Required</label></div>
+                    <button type="submit" class="btn btn-primary w-100">Save Field</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light"><tr><th>Order</th><th>Label</th><th>Type</th><th>Required</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        <tr th:each="field : ${fields}">
+                            <td th:text="${field.displayOrder}">0</td>
+                            <td th:text="${field.label}">Label</td>
+                            <td><span class="badge bg-secondary" th:text="${field.fieldType}">Type</span></td>
+                            <td><i class="bi" th:classappend="${field.required ? 'bi-check-circle text-success' : 'bi-dash text-muted'}"></i></td>
+                            <td><a th:href="@{'/admin/forms/' + ${form.id} + '/fields/' + ${field.id} + '/delete'}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

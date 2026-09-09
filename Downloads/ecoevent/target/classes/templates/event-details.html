@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Event Details')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <img th:src="${event.imageUrl != null ? event.imageUrl : 'https://via.placeholder.com/800x300/2E7D32/fff?text=EcoEvent'}" 
+                 class="img-fluid rounded shadow-sm mb-4" style="width:100%;height:350px;object-fit:cover" alt="Event"/>
+            <span class="badge bg-success mb-2" th:text="${event.category != null ? event.category.name : 'General'}">Category</span>
+            <h1 class="fw-bold text-primary mb-3" th:text="${event.title}">Title</h1>
+            <p class="text-muted" th:text="${event.description}">Description</p>
+            
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm mb-3">
+                        <div class="card-body">
+                            <h6 class="text-primary"><i class="bi bi-calendar me-2"></i>Event Schedule</h6>
+                            <p class="mb-1 small"><strong>Start:</strong> <span th:text="${#temporals.format(event.startDate, 'dd MMM yyyy, HH:mm')}">Start</span></p>
+                            <p class="mb-0 small"><strong>End:</strong> <span th:text="${event.endDate != null ? #temporals.format(event.endDate, 'dd MMM yyyy, HH:mm') : 'TBD'}">End</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm mb-3">
+                        <div class="card-body">
+                            <h6 class="text-primary"><i class="bi bi-geo-alt me-2"></i>Location</h6>
+                            <p class="mb-0 small" th:text="${event.location}">Location</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sustainability Section -->
+            <h4 class="fw-bold text-success mt-4"><i class="bi bi-globe me-2"></i>Sustainability Information</h4>
+            <div class="row g-3 mt-1">
+                <div class="col-md-4">
+                    <div class="sustain-badge" th:classappend="${event.digitalInvitations ? 'active' : ''}">
+                        <i class="bi bi-envelope-paper"></i> Digital Invitations
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="sustain-badge" th:classappend="${event.digitalTickets ? 'active' : ''}">
+                        <i class="bi bi-qr-code"></i> Digital Tickets
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="sustain-badge" th:classappend="${event.reusableDecorations ? 'active' : ''}">
+                        <i class="bi bi-arrow-repeat"></i> Reusable Decorations
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="sustain-badge" th:classappend="${event.wasteSegregation ? 'active' : ''}">
+                        <i class="bi bi-sort-down"></i> Waste Segregation
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="sustain-badge" th:classappend="${event.sustainableFoodPractices ? 'active' : ''}">
+                        <i class="bi bi-cup-straw"></i> Sustainable Food
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="sustain-badge" th:classappend="${event.sustainable ? 'active' : ''}">
+                        <i class="bi bi-shield-check"></i> Eco-Certified
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sustainability Score -->
+            <div th:if="${score != null}" class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h5 class="text-success"><i class="bi bi-award me-2"></i>Sustainability Score: <span th:text="${score.totalScore + '/100'}">Score</span></h5>
+                    <div class="progress mb-3" style="height:25px">
+                        <div class="progress-bar bg-success" th:style="'width:' + ${score.totalScore} + '%'">
+                            <span th:text="'Grade: ' + ${score.grade}">Grade</span>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-4 col-md-2 mb-2"><small class="text-muted d-block">Resource</small><strong th:text="${score.resourceEfficiencyScore}">0</strong></div>
+                        <div class="col-4 col-md-2 mb-2"><small class="text-muted d-block">Waste</small><strong th:text="${score.wasteManagementScore}">0</strong></div>
+                        <div class="col-4 col-md-2 mb-2"><small class="text-muted d-block">Food</small><strong th:text="${score.foodManagementScore}">0</strong></div>
+                        <div class="col-4 col-md-2 mb-2"><small class="text-muted d-block">Digital</small><strong th:text="${score.digitalizationScore}">0</strong></div>
+                        <div class="col-4 col-md-2 mb-2"><small class="text-muted d-block">Reusable</small><strong th:text="${score.reusableMaterialsScore}">0</strong></div>
+                        <div class="col-4 col-md-2 mb-2"><small class="text-muted d-block">Vendors</small><strong th:text="${score.sustainableVendorsScore}">0</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback -->
+            <h4 class="fw-bold text-primary mt-4"><i class="bi bi-chat-dots me-2"></i>Participant Feedback</h4>
+            <div th:if="${feedbacks != null and !feedbacks.isEmpty()}" class="mt-3">
+                <div class="card border-0 shadow-sm mb-2" th:each="fb : ${feedbacks}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <strong th:text="${fb.user != null ? fb.user.fullName : 'Anonymous'}">Name</strong>
+                            <span>
+                                <i class="bi bi-star-fill text-warning" th:each="i : ${#numbers.sequence(1, fb.rating != null ? fb.rating : 1)}"></i>
+                            </span>
+                        </div>
+                        <p class="text-muted mb-0 mt-1" th:text="${fb.comment}">Comment</p>
+                    </div>
+                </div>
+            </div>
+            <p th:if="${feedbacks == null or feedbacks.isEmpty()}" class="text-muted">No feedback yet.</p>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow border-0 sticky-top" style="top:80px">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold text-primary" th:text="${event.ticketPrice.doubleValue() == 0.0 ? 'Free' : '₹' + event.ticketPrice}">Price</h3>
+                    <p class="text-muted small"><i class="bi bi-people me-1"></i>Max: <span th:text="${event.maxParticipants}">0</span> participants</p>
+                    <p class="text-muted small"><i class="bi bi-person-check me-1"></i>Expected: <span th:text="${event.expectedAttendance}">0</span></p>
+                    <div sec:authorize="isAuthenticated()">
+                        <a th:href="@{'/participant/events/' + ${event.id} + '/register'}" class="btn btn-success w-100 py-2 fw-bold mb-2">
+                            <i class="bi bi-ticket me-1"></i> Register Now
+                        </a>
+                        <a th:href="@{'/reports/event/' + ${event.id} + '/pdf'}" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-file-earmark-pdf me-1"></i> Download Report
+                        </a>
+                    </div>
+                    <div sec:authorize="isAnonymous()">
+                        <a th:href="@{/login}" class="btn btn-primary w-100 py-2 fw-bold">Login to Register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

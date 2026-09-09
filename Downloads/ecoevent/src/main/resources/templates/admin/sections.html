@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Sections')}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="d-flex">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+    <div class="flex-grow-1 p-4">
+<h2 class="fw-bold text-primary mb-2"><i class="bi bi-layers me-2"></i>Sections for: <span th:text="${page.name}">Page</span></h2>
+<p><a th:href="@{/admin/pages}" class="text-decoration-none"><i class="bi bi-arrow-left"></i> Back to Pages</a></p>
+<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h5>Add Section</h5>
+                <form th:action="@{/admin/sections/save}" method="post">
+                    <input type="hidden" name="pageId" th:value="${page.id}"/>
+                    <input type="hidden" name="id"/>
+                    <div class="mb-2"><label class="form-label small">Section Name</label><input type="text" name="sectionName" class="form-control" required/></div>
+                    <div class="mb-2"><label class="form-label small">Section Type</label>
+                        <select name="sectionType" class="form-select">
+                            <option th:each="st : ${sectionTypes}" th:value="${st}" th:text="${st}">Type</option>
+                        </select>
+                    </div>
+                    <div class="mb-2"><label class="form-label small">Content</label><textarea name="content" class="form-control" rows="3"></textarea></div>
+                    <div class="mb-2"><label class="form-label small">Image URL</label><input type="text" name="image" class="form-control"/></div>
+                    <div class="mb-2"><label class="form-label small">Button Text</label><input type="text" name="buttonText" class="form-control"/></div>
+                    <div class="mb-2"><label class="form-label small">Button URL</label><input type="text" name="buttonUrl" class="form-control"/></div>
+                    <div class="mb-2"><label class="form-label small">Background Color</label><input type="text" name="backgroundColor" class="form-control" placeholder="#F1F8E9"/></div>
+                    <div class="mb-2"><label class="form-label small">Display Order</label><input type="number" name="displayOrder" class="form-control" value="0"/></div>
+                    <div class="form-check mb-2"><input type="checkbox" name="visible" class="form-check-input" checked/><label class="form-check-label small">Visible</label></div>
+                    <div class="form-check mb-3"><input type="checkbox" name="enabled" class="form-check-input" checked/><label class="form-check-label small">Enabled</label></div>
+                    <button type="submit" class="btn btn-primary w-100">Save Section</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light"><tr><th>Order</th><th>Name</th><th>Type</th><th>Visible</th><th>Enabled</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        <tr th:each="section : ${sections}">
+                            <td th:text="${section.displayOrder}">0</td>
+                            <td th:text="${section.sectionName}">Name</td>
+                            <td><span class="badge bg-secondary" th:text="${section.sectionType}">Type</span></td>
+                            <td><i class="bi" th:classappend="${section.visible ? 'bi-eye text-success' : 'bi-eye-slash text-muted'}"></i></td>
+                            <td><i class="bi" th:classappend="${section.enabled ? 'bi-check-circle text-success' : 'bi-x-circle text-danger'}"></i></td>
+                            <td>
+                                <a th:href="@{'/admin/sections/' + ${section.id} + '/toggle-visibility'}" class="btn btn-sm btn-outline-warning"><i class="bi bi-eye"></i></a>
+                                <a th:href="@{'/admin/sections/' + ${section.id} + '/toggle-enabled'}" class="btn btn-sm btn-outline-info"><i class="bi bi-power"></i></a>
+                                <a th:href="@{'/admin/sections/' + ${section.id} + '/delete'}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete?')"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

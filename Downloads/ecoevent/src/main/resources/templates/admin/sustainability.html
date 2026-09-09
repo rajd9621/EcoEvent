@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Sustainability')}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="d-flex">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+    <div class="flex-grow-1 p-4">
+<h2 class="fw-bold text-primary mb-4"><i class="bi bi-globe2 me-2"></i>Sustainability Management</h2>
+<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card border-0 shadow-sm p-3"><h6 class="text-muted small">Total Events</h6><h3 th:text="${stats.totalEvents}">0</h3></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm p-3"><h6 class="text-muted small">Sustainable</h6><h3 th:text="${stats.sustainableEvents}">0</h3></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm p-3"><h6 class="text-muted small">Avg Score</h6><h3 th:text="${#numbers.formatDecimal(stats.avgScore, 1, 1)}">0</h3></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm p-3"><h6 class="text-muted small">Waste Records</h6><h3 th:text="${stats.totalWasteRecords}">0</h3></div></div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white"><h6 class="mb-0 fw-bold">Scoring Categories</h6></div>
+            <div class="card-body">
+                <form th:action="@{/admin/sustainability/metrics/save}" method="post" class="row g-2 mb-3">
+                    <input type="hidden" name="id"/>
+                    <div class="col-5"><input type="text" name="categoryName" class="form-control form-control-sm" placeholder="Category Name" required/></div>
+                    <div class="col-3"><input type="number" name="weight" class="form-control form-control-sm" placeholder="Weight" required/></div>
+                    <div class="col-4"><button type="submit" class="btn btn-sm btn-primary w-100">Add/Update</button></div>
+                </form>
+                <table class="table table-sm">
+                    <thead><tr><th>Category</th><th>Weight</th><th></th></tr></thead>
+                    <tbody>
+                        <tr th:each="m : ${metrics}">
+                            <td th:text="${m.categoryName}">Name</td>
+                            <td><span class="badge bg-success" th:text="${m.weight}">0</span></td>
+                            <td><a th:href="@{'/admin/sustainability/metrics/' + ${m.id} + '/delete'}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between"><h6 class="mb-0 fw-bold">Sustainable Vendors</h6></div>
+            <div class="card-body">
+                <form th:action="@{/admin/vendors/save}" method="post" class="row g-2 mb-3">
+                    <input type="hidden" name="id"/>
+                    <div class="col-6"><input type="text" name="name" class="form-control form-control-sm" placeholder="Vendor Name" required/></div>
+                    <div class="col-4"><input type="text" name="vendorType" class="form-control form-control-sm" placeholder="Type"/></div>
+                    <div class="col-2"><button type="submit" class="btn btn-sm btn-primary w-100">Add</button></div>
+                </form>
+                <table class="table table-sm">
+                    <tbody>
+                        <tr th:each="v : ${vendors}">
+                            <td th:text="${v.name}">Name</td>
+                            <td th:text="${v.vendorType}">Type</td>
+                            <td><span class="badge" th:classappend="${v.sustainabilityCertified ? 'bg-success' : 'bg-secondary'}" th:text="${v.sustainabilityCertified ? 'Certified' : 'Standard'}">Status</span></td>
+                            <td><a th:href="@{'/admin/vendors/' + ${v.id} + '/delete'}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card border-0 shadow-sm mt-3">
+    <div class="card-header bg-white"><h6 class="mb-0 fw-bold">Top Sustainability Scores</h6></div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light"><tr><th>Event</th><th>Score</th><th>Grade</th></tr></thead>
+            <tbody>
+                <tr th:each="s : ${scores}">
+                    <td th:text="${s.event.title}">Event</td>
+                    <td><span class="badge bg-success" th:text="${s.totalScore + '/100'}">Score</span></td>
+                    <td><span class="badge bg-primary" th:text="${s.grade}">Grade</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

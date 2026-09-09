@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('SDG 12')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-md-2 text-center">
+            <div class="sdg-badge-lg">12</div>
+        </div>
+        <div class="col-md-10">
+            <h1 class="fw-bold text-success">Responsible Consumption and Production</h1>
+            <p class="lead">Our platform directly contributes to UN SDG 12 by integrating sustainability into every aspect of event management.</p>
+        </div>
+    </div>
+    
+    <div th:each="section : ${sections}">
+        <p th:text="${section.content}">Content</p>
+    </div>
+
+    <div class="row g-4 mt-3">
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card-mini text-center p-3 border-0 shadow-sm">
+                <i class="bi bi-calendar-check text-success" style="font-size:2rem"></i>
+                <h3 class="fw-bold mt-2" th:text="${metrics.totalEvents}">0</h3>
+                <p class="text-muted mb-0">Total Events</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card-mini text-center p-3 border-0 shadow-sm">
+                <i class="bi bi-globe text-success" style="font-size:2rem"></i>
+                <h3 class="fw-bold mt-2" th:text="${metrics.sustainableEvents}">0</h3>
+                <p class="text-muted mb-0">Sustainable Events</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card-mini text-center p-3 border-0 shadow-sm">
+                <i class="bi bi-graph-up text-success" style="font-size:2rem"></i>
+                <h3 class="fw-bold mt-2" th:text="${#numbers.formatDecimal(metrics.avgScore, 1, 1)}">0</h3>
+                <p class="text-muted mb-0">Avg Score</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card-mini text-center p-3 border-0 shadow-sm">
+                <i class="bi bi-recycle text-success" style="font-size:2rem"></i>
+                <h3 class="fw-bold mt-2" th:text="${metrics.totalWasteRecords}">0</h3>
+                <p class="text-muted mb-0">Waste Records</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <h4 class="fw-bold text-success">How We Track Sustainability</h4>
+            <p>EcoEvent tracks 17+ sustainability metrics across every event:</p>
+            <div class="row">
+                <div class="col-6 mb-2"><i class="bi bi-check-circle text-success me-1"></i> Food requirement & consumption</div>
+                <div class="col-6 mb-2"><i class="bi bi-check-circle text-success me-1"></i> Water & electricity usage</div>
+                <div class="col-6 mb-2"><i class="bi bi-check-circle text-success me-1"></i> Printed vs reusable materials</div>
+                <div class="col-6 mb-2"><i class="bi bi-check-circle text-success me-1"></i> Plastic & paper usage</div>
+                <div class="col-6 mb-2"><i class="bi bi-check-circle text-success me-1"></i> Organic, plastic, e-waste</div>
+                <div class="col-6 mb-2"><i class="bi bi-check-circle text-success me-1"></i> Recyclable waste & recycling</div>
+                <div class="col-6 mb-2"><i class="bi bi-check-circle text-success me-1"></i> Sustainable & local vendors</div>
+                <div class="col-6 mb-2"><i class="bi bi-check-circle text-success me-1"></i> Digital invitations & tickets</div>
+                <div class="col-6 mb-2"><i class="bi bi-check-circle text-success me-1"></i> Waste segregation</div>
+                <div class="col-6 mb-2"><i class="bi bi-check-circle text-success me-1"></i> Post-event reporting</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h4 class="fw-bold text-success">Scoring Categories</h4>
+            <div class="list-group">
+                <div class="list-group-item d-flex justify-content-between"><span>Resource Efficiency</span><span class="badge bg-success">20</span></div>
+                <div class="list-group-item d-flex justify-content-between"><span>Waste Management</span><span class="badge bg-success">20</span></div>
+                <div class="list-group-item d-flex justify-content-between"><span>Food Management</span><span class="badge bg-success">15</span></div>
+                <div class="list-group-item d-flex justify-content-between"><span>Digitalization</span><span class="badge bg-success">15</span></div>
+                <div class="list-group-item d-flex justify-content-between"><span>Reusable Materials</span><span class="badge bg-success">10</span></div>
+                <div class="list-group-item d-flex justify-content-between"><span>Sustainable Vendors</span><span class="badge bg-success">10</span></div>
+                <div class="list-group-item d-flex justify-content-between"><span>Post-event Reporting</span><span class="badge bg-success">10</span></div>
+            </div>
+            <p class="text-muted small mt-2">Scores are configurable by admin without modifying source code.</p>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: footer}"></div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

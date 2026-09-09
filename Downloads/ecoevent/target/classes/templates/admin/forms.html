@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Forms')}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/layout :: header}"></div>
+<div class="d-flex">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar}"></div>
+    <div class="flex-grow-1 p-4">
+<h2 class="fw-bold text-primary mb-4"><i class="bi bi-ui-checks-grid me-2"></i>Form Builder</h2>
+<div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h5>Create Form</h5>
+                <form th:action="@{/admin/forms/save}" method="post">
+                    <input type="hidden" name="id"/>
+                    <div class="mb-2"><label class="form-label small">Form Name</label><input type="text" name="name" class="form-control" required/></div>
+                    <div class="mb-2"><label class="form-label small">Description</label><textarea name="description" class="form-control" rows="2"></textarea></div>
+                    <div class="mb-2"><label class="form-label small">Submit Button Text</label><input type="text" name="submitButtonText" class="form-control" value="Submit"/></div>
+                    <div class="mb-2"><label class="form-label small">Success Message</label><input type="text" name="successMessage" class="form-control" value="Thank you!"/></div>
+                    <div class="form-check mb-2"><input type="checkbox" name="active" class="form-check-input" checked/><label class="form-check-label small">Active</label></div>
+                    <button type="submit" class="btn btn-primary w-100">Save Form</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light"><tr><th>Name</th><th>Active</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        <tr th:each="form : ${forms}">
+                            <td th:text="${form.name}">Name</td>
+                            <td><i class="bi" th:classappend="${form.active ? 'bi-check-circle text-success' : 'bi-x-circle text-danger'}"></i></td>
+                            <td>
+                                <a th:href="@{'/admin/forms/' + ${form.id} + '/fields'}" class="btn btn-sm btn-outline-info">Fields</a>
+                                <a th:href="@{'/admin/forms/' + ${form.id} + '/submissions'}" class="btn btn-sm btn-outline-primary">Submissions</a>
+                                <a th:href="@{'/admin/forms/' + ${form.id} + '/delete'}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<aside th:fragment="sidebar" class="eco-sidebar">
+    <div class="p-3">
+        <h6 class="text-white-50 small fw-bold text-uppercase mb-3">Admin Panel</h6>
+        <nav class="nav flex-column">
+            <a th:href="@{/admin/dashboard}" class="nav-link text-light"><i class="bi bi-speedometer2 me-2"></i>Overview</a>
+            <a th:href="@{/admin/users}" class="nav-link text-light"><i class="bi bi-people me-2"></i>Users</a>
+            <a th:href="@{/admin/events}" class="nav-link text-light"><i class="bi bi-calendar-event me-2"></i>Events</a>
+            <a th:href="@{/admin/categories}" class="nav-link text-light"><i class="bi bi-tags me-2"></i>Categories</a>
+            <a th:href="@{/admin/registrations}" class="nav-link text-light"><i class="bi bi-clipboard-check me-2"></i>Registrations</a>
+            <a th:href="@{/admin/payments}" class="nav-link text-light"><i class="bi bi-credit-card me-2"></i>Payments</a>
+            <hr class="border-light border-opacity-25"/>
+            <a th:href="@{/admin/sustainability}" class="nav-link text-light"><i class="bi bi-globe2 me-2"></i>Sustainability</a>
+            <a th:href="@{/admin/pages}" class="nav-link text-light"><i class="bi bi-file-earmark me-2"></i>Website Builder</a>
+            <a th:href="@{/admin/navigation}" class="nav-link text-light"><i class="bi bi-list-nested me-2"></i>Navigation</a>
+            <a th:href="@{/admin/theme}" class="nav-link text-light"><i class="bi bi-palette me-2"></i>Theme Manager</a>
+            <a th:href="@{/admin/forms}" class="nav-link text-light"><i class="bi bi-ui-checks-grid me-2"></i>Form Builder</a>
+            <a th:href="@{/admin/feedback}" class="nav-link text-light"><i class="bi bi-chat-dots me-2"></i>Feedback</a>
+            <a th:href="@{/admin/notifications}" class="nav-link text-light"><i class="bi bi-bell me-2"></i>Notifications</a>
+            <a th:href="@{/admin/settings}" class="nav-link text-light"><i class="bi bi-gear me-2"></i>Settings</a>
+            <hr class="border-light border-opacity-25"/>
+            <a th:href="@{/}" class="nav-link text-light"><i class="bi bi-box-arrow-up-right me-2"></i>View Site</a>
+            <a th:href="@{/logout}" class="nav-link text-warning"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
+        </nav>
+    </div>
+</aside>
